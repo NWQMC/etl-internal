@@ -16,7 +16,8 @@ insert /*+ append parallel(4) */
   into r_detect_qnt_lmt_swap_nwis(data_source_id, data_source, station_id, site_id, event_date, activity, analytical_method,
                                   characteristic_name, characteristic_type, sample_media, organization, site_type, huc, governmental_unit_code,
                                   organization_name, project_id, assemblage_sampled_name, sample_tissue_taxonomic_name, activity_id,
-                                  result_id, detection_limit_id, detection_limit, detection_limit_unit, detection_limit_desc)
+                                  result_id, detection_limit_id, detection_limit, detection_limit_unit, detection_limit_desc,
+                                  deprecated_flag, web_code)
 select /*+ parallel(4) */
        data_source_id,
        data_source,
@@ -41,7 +42,9 @@ select /*+ parallel(4) */
        result_id detection_limit_id,
        detection_limit,
        detection_limit_unit,
-       detection_limit_desc
+       detection_limit_desc,
+       deprecated_flag,
+       web_code
   from result_swap_nwis
  where detection_limit is not null or
        detection_limit_unit is not null or

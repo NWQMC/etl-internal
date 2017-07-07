@@ -9,11 +9,11 @@ select 'copy from natprod start time: ' || systimestamp from dual;
 prompt altitude_method
 truncate table altitude_method;
 insert /*+ append parallel(4) */ into altitude_method
-select trim(gw_ref_cd),
-       trim(gw_ref_nm),
+select regexp_replace(gw_ref_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_ref_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        gw_sort_nu,
-       trim(gw_ref_ds),
-       trim(gw_valid_fg)
+       regexp_replace(gw_ref_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_valid_fg, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.gw_reflist@natdb.er.usgs.gov
  where gw_ed_tbl_nm = 'saltmt';
 commit;
@@ -21,11 +21,11 @@ commit;
 prompt aqfr
 truncate table aqfr;
 insert /*+ append parallel(4) */ into aqfr
-select trim(aqfr_state.country_cd),
-       trim(aqfr_state.state_cd),
-       trim(aqfr.aqfr_cd),
-       trim(aqfr.aqfr_nm),
-       trim(aqfr.aqfr_dt)
+select regexp_replace(aqfr_state.country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr_state.state_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr.aqfr_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr.aqfr_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr.aqfr_dt, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.aqfr@natdb.er.usgs.gov
        join natdb.aqfr_state@natdb.er.usgs.gov
          on aqfr.aqfr_cd = aqfr_state.aqfr_cd;
@@ -34,11 +34,11 @@ commit;
 prompt aquifer_type
 truncate table aquifer_type;
 insert /*+ append parallel(4) */ into aquifer_type
-select trim(gw_ref_cd),
-       trim(gw_ref_nm),
+select regexp_replace(gw_ref_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_ref_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        gw_sort_nu,
-       trim(gw_ref_ds),
-       trim(gw_valid_fg)
+       regexp_replace(gw_ref_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_valid_fg, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.gw_reflist@natdb.er.usgs.gov
  where gw_ed_tbl_nm = 'saqtyp';
 commit;
@@ -46,8 +46,8 @@ commit;
 prompt body_part
 truncate table body_part;
 insert /*+ append parallel(4) */ into body_part
-select trim(body_part_id),
-       trim(body_part_nm)
+select regexp_replace(body_part_id, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(body_part_nm, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.body_part@natdb.er.usgs.gov;
 commit;
 
@@ -55,13 +55,13 @@ prompt cit_meth
 truncate table cit_meth;
 insert /*+ append parallel(4) */ into cit_meth
 select cit_meth_id,
-       trim(meth_cd),
-       trim(cit_nm),
-       trim(cit_meth_no),
-       trim(meth_src_cd),
-       trim(cit_meth_init_nm),
+       regexp_replace(meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(cit_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(cit_meth_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_src_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(cit_meth_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        cit_meth_init_dt,
-       trim(cit_meth_rev_nm),
+       regexp_replace(cit_meth_rev_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        cit_meth_rev_dt
   from natdb.cit_meth@natdb.er.usgs.gov;
 commit;
@@ -69,168 +69,168 @@ commit;
 prompt country - STORET still has CN as Canada, all but a few NWIS sites have been migrated, and we never expect data for China, so do not include any CN in NWIS data
 truncate table country;
 insert /*+ append parallel(4) */ into country
-select trim(country_cd),
-       trim(country_nm)
+select regexp_replace(country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(country_nm, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.country@natdb.er.usgs.gov
- where trim(country_cd) != 'CN';
+ where regexp_replace(country_cd, '(^[[:space:]]*|[[:space:]]*$)') != 'CN';
 commit;
 
 prompt county
 truncate table county;
 insert /*+ append parallel(4) */ into county
-select trim(country_cd),
-       trim(state_cd),
-       trim(county_cd),
-       trim(county_nm),
-       trim(county_max_lat_va),
-       trim(county_min_lat_va),
-       trim(county_max_long_va),
-       trim(county_min_long_va),
-       trim(county_max_alt_va),
-       trim(county_min_alt_va),
-       trim(county_md)
+select regexp_replace(country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_max_lat_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_min_lat_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_max_long_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_min_long_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_max_alt_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_min_alt_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_md, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.county@natdb.er.usgs.gov;
 commit;
 
 prompt fxd
 truncate table fxd;
 insert /*+ append parallel(4) */ into fxd
-select trim(parm_cd),
+select regexp_replace(parm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        fxd_va,
-       trim(fxd_nm),
-       trim(fxd_tx),
+       regexp_replace(fxd_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(fxd_tx, '(^[[:space:]]*|[[:space:]]*$)'),
        fxd_init_dt,
-       trim(fxd_init_nm),
+       regexp_replace(fxd_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        fxd_rev_dt,
-       trim(fxd_rev_nm)
+       regexp_replace(fxd_rev_nm, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.fxd@natdb.er.usgs.gov;
 commit;
 
 prompt hyd_cond_cd
 truncate table hyd_cond_cd;
 insert /*+ append parallel(4) */ into hyd_cond_cd
-select trim(hyd_cond_cd),
+select regexp_replace(hyd_cond_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        hyd_cond_srt_nu,
-       trim(hyd_cond_vld_fg),
-       trim(hyd_cond_nm),
-       trim(hyd_cond_ds)
+       regexp_replace(hyd_cond_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_cond_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_cond_ds, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.hyd_cond_cd@natdb.er.usgs.gov;
 commit;
 
 prompt hyd_event_cd
 truncate table hyd_event_cd;
 insert /*+ append parallel(4) */ into hyd_event_cd
-select trim(hyd_event_cd),
+select regexp_replace(hyd_event_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        hyd_event_srt_nu,
-       trim(hyd_event_vld_fg),
-       trim(hyd_event_nm),
-       trim(hyd_event_ds)
+       regexp_replace(hyd_event_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_event_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_event_ds, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.hyd_event_cd@natdb.er.usgs.gov;
 commit;
 
 prompt int_qw_result
 truncate table int_qw_result;
 insert /*+ append parallel(4) */ into int_qw_result
-select trim(nwis_host_nm),
-       trim(db_no),
-       trim(record_no),
-       trim(parm_cd),
-       trim(meth_cd),
+select regexp_replace(nwis_host_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(db_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(record_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        result_va,
-       trim(result_va_tx),
-       trim(result_sg),
-       trim(result_rd),
-       trim(remark_cd),
+       regexp_replace(result_va_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(result_sg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(result_rd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(remark_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        rpt_lev_va,
-       trim(rpt_lev_va_tx),
-       trim(rpt_lev_sg),
-       trim(rpt_lev_cd),
+       regexp_replace(rpt_lev_va_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(rpt_lev_sg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(rpt_lev_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        result_rnd_va,
-       trim(result_rnd_va_tx),
-       trim(remark_rnd_cd),
-       trim(dqi_cd),
-       trim(null_val_qual_cd),
-       trim(prep_set_no),
+       regexp_replace(result_rnd_va_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(remark_rnd_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(dqi_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(null_val_qual_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(prep_set_no, '(^[[:space:]]*|[[:space:]]*$)'),
        prep_dt,
-       trim(anl_set_no),
+       regexp_replace(anl_set_no, '(^[[:space:]]*|[[:space:]]*$)'),
        anl_dt,
        lab_std_dev_va,
-       trim(lab_std_dev_va_tx),
-       trim(lab_std_dev_sg),
-       trim(anl_ent_cd),
-       trim(val_qual_cd_tx),
-       trim(result_cn),
+       regexp_replace(lab_std_dev_va_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(lab_std_dev_sg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(anl_ent_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(val_qual_cd_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(result_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_cr,
-       trim(result_mn),
+       regexp_replace(result_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_md,
-       trim(result_lab_cm_tx),
-       trim(result_lab_cm_cn),
+       regexp_replace(result_lab_cm_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(result_lab_cm_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_lab_cm_cr,
-       trim(result_lab_cm_mn),
+       regexp_replace(result_lab_cm_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_lab_cm_md,
-       trim(result_field_cm_tx),
-       trim(result_field_cm_cn),
+       regexp_replace(result_field_cm_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(result_field_cm_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_field_cm_cr,
-       trim(result_field_cm_mn),
+       regexp_replace(result_field_cm_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        result_field_cm_md,
-       trim(result_web_cd),
+       regexp_replace(result_web_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        result_ld,
-       trim(deprecated_fg)
+       regexp_replace(deprecated_fg, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.qw_result@natdb.er.usgs.gov;
 commit;
 
 prompt int_qw_sample
 truncate table int_qw_sample;
 insert /*+ append parallel(4) */ into int_qw_sample
-select trim(nwis_host_nm),
-       trim(db_no),
-       trim(record_no),
-       trim(agency_cd),
-       trim(site_no),
-       trim(site_db_no),
-       trim(medium_cd),
+select regexp_replace(nwis_host_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(db_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(record_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(agency_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_db_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(medium_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_start_dt,
-       trim(sample_start_sg),
-       trim(sample_start_tz_cd),
-       trim(sample_start_local_tm_fg),
+       regexp_replace(sample_start_sg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_start_tz_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_start_local_tm_fg, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_end_dt,
-       trim(sample_end_sg),
-       trim(sample_end_tz_cd),
-       trim(sample_end_local_tm_fg),
-       trim(sample_start_local_disp_fm),
-       trim(sample_start_utc_disp_fm),
-       trim(sample_end_local_disp_fm),
-       trim(sample_end_utc_disp_fm),
-       trim(local_tz_cd),
-       trim(tm_datum_rlblty_cd),
+       regexp_replace(sample_end_sg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_end_tz_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_end_local_tm_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_start_local_disp_fm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_start_utc_disp_fm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_end_local_disp_fm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_end_utc_disp_fm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(local_tz_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tm_datum_rlblty_cd, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_id,
-       trim(anl_stat_cd),
-       trim(hyd_cond_cd),
-       trim(samp_type_cd),
-       trim(hyd_event_cd),
-       trim(project_cd),
-       trim(aqfr_cd),
-       trim(lab_no),
+       regexp_replace(anl_stat_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_cond_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(samp_type_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hyd_event_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(project_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(lab_no, '(^[[:space:]]*|[[:space:]]*$)'),
        tu_id,
        body_part_id,
-       trim(coll_ent_cd),
-       trim(sidno_party_cd),
-       trim(sample_cn),
+       regexp_replace(coll_ent_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sidno_party_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_cr,
-       trim(sample_mn),
+       regexp_replace(sample_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_md,
-       trim(sample_lab_cm_tx),
-       trim(sample_lab_cm_cn),
+       regexp_replace(sample_lab_cm_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_lab_cm_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_lab_cm_cr,
-       trim(sample_lab_cm_mn),
+       regexp_replace(sample_lab_cm_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_lab_cm_md,
-       trim(sample_field_cm_tx),
-       trim(sample_field_cm_cn),
+       regexp_replace(sample_field_cm_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(sample_field_cm_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_field_cm_cr,
-       trim(sample_field_cm_mn),
+       regexp_replace(sample_field_cm_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_field_cm_md,
-       trim(sample_web_cd),
-       trim(deprecated_fg),
+       regexp_replace(sample_web_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(deprecated_fg, '(^[[:space:]]*|[[:space:]]*$)'),
        sample_ld
   from natdb.qw_sample@natdb.er.usgs.gov;
 commit;
@@ -238,67 +238,67 @@ commit;
 prompt int_sitefile
 truncate table int_sitefile;
 insert /*+ append parallel(4) */ into int_sitefile
-select trim(nwis_host_nm),
-       trim(db_no),
-       trim(agency_cd),
-       trim(site_no),
-       trim(station_nm),
-       trim(station_ix),
-       trim(lat_va),
-       trim(long_va),
+select regexp_replace(nwis_host_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(db_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(agency_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(station_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(station_ix, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(lat_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(long_va, '(^[[:space:]]*|[[:space:]]*$)'),
        dec_lat_va,
        dec_long_va,
-       trim(coord_meth_cd),
-       trim(coord_acy_cd),
-       trim(coord_datum_cd),
-       trim(district_cd),
-       trim(land_net_ds),
-       trim(map_nm),
-       trim(country_cd),
-       trim(state_cd),
-       trim(county_cd),
-       trim(mcd_cd),
-       trim(map_scale_fc),
-       trim(alt_va),
-       trim(alt_meth_cd),
-       trim(alt_acy_va),
-       trim(alt_datum_cd),
-       trim(huc_cd),
-       trim(agency_use_cd),
-       trim(basin_cd),
-       trim(site_tp_cd),
-       trim(topo_cd),
-       trim(data_types_cd),
-       trim(instruments_cd),
-       trim(site_rmks_tx),
-       trim(inventory_dt),
-       trim(drain_area_va),
-       trim(contrib_drain_area_va),
-       trim(tz_cd),
-       trim(local_time_fg),
-       trim(gw_file_cd),
-       trim(construction_dt),
-       trim(reliability_cd),
-       trim(aqfr_cd),
-       trim(nat_aqfr_cd),
-       trim(site_use_1_cd),
-       trim(site_use_2_cd),
-       trim(site_use_3_cd),
-       trim(water_use_1_cd),
-       trim(water_use_2_cd),
-       trim(water_use_3_cd),
-       trim(nat_water_use_cd),
-       trim(aqfr_type_cd),
-       trim(well_depth_va),
-       trim(hole_depth_va),
-       trim(depth_src_cd),
-       trim(project_no),
-       trim(site_web_cd),
-       trim(site_cn),
+       regexp_replace(coord_meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(coord_acy_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(coord_datum_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(district_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(land_net_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(map_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(county_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(mcd_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(map_scale_fc, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(alt_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(alt_meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(alt_acy_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(alt_datum_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(huc_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(agency_use_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(basin_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_tp_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(topo_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(data_types_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(instruments_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_rmks_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(inventory_dt, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(drain_area_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(contrib_drain_area_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(local_time_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_file_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(construction_dt, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(reliability_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(nat_aqfr_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_use_1_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_use_2_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_use_3_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(water_use_1_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(water_use_2_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(water_use_3_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(nat_water_use_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(aqfr_type_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(well_depth_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(hole_depth_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(depth_src_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(project_no, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_web_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_cn, '(^[[:space:]]*|[[:space:]]*$)'),
        site_cr,
-       trim(site_mn),
+       regexp_replace(site_mn, '(^[[:space:]]*|[[:space:]]*$)'),
        site_md,
-       trim(deprecated_fg),
+       regexp_replace(deprecated_fg, '(^[[:space:]]*|[[:space:]]*$)'),
        site_ld
   from natdb.sitefile@natdb.er.usgs.gov;
 commit;
@@ -306,11 +306,11 @@ commit;
 prompt lat_long_datum
 truncate table lat_long_datum;
 insert /*+ append parallel(4) */ into lat_long_datum
-select trim(gw_ref_cd),
-       trim(gw_ref_nm),
+select regexp_replace(gw_ref_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_ref_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        gw_sort_nu,
-       trim(gw_ref_ds),
-       trim(gw_valid_fg)
+       regexp_replace(gw_ref_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_valid_fg, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.gw_reflist@natdb.er.usgs.gov
  where gw_ed_tbl_nm = 'scordm';
 commit;
@@ -318,11 +318,11 @@ commit;
 prompt lat_long_method
 truncate table lat_long_method;
 insert /*+ append parallel(4) */ into lat_long_method
-select trim(gw_ref_cd),
-       trim(gw_ref_nm),
+select regexp_replace(gw_ref_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_ref_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        gw_sort_nu,
-       trim(gw_ref_ds),
-       trim(gw_valid_fg)
+       regexp_replace(gw_ref_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(gw_valid_fg, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.gw_reflist@natdb.er.usgs.gov
  where gw_ed_tbl_nm = 'scormt';
 commit;
@@ -330,15 +330,15 @@ commit;
 prompt meth
 truncate table meth;
 insert /*+ append parallel(4) */ into meth
-select trim(meth_cd),
-       trim(meth_tp),
-       trim(meth_nm),
-       trim(meth_ds),
-       trim(meth_rnd_owner_cd),
-       trim(discipline_cd),
-       trim(meth_init_nm),
+select regexp_replace(meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_tp, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_rnd_owner_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(discipline_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        meth_init_dt,
-       trim(meth_rev_nm),
+       regexp_replace(meth_rev_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        meth_rev_dt
   from natdb.meth@natdb.er.usgs.gov;
 commit;
@@ -358,10 +358,10 @@ commit;
 prompt nat_aqfr
 truncate table nat_aqfr;
 insert /*+ append parallel(4) */ into nat_aqfr
-select trim(nat_aqfr_state.country_cd),
-       trim(nat_aqfr_state.state_cd),
-       trim(nat_aqfr.nat_aqfr_cd),
-       trim(nat_aqfr.nat_aqfr_nm)
+select regexp_replace(nat_aqfr_state.country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(nat_aqfr_state.state_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(nat_aqfr.nat_aqfr_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(nat_aqfr.nat_aqfr_nm, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.nat_aqfr@natdb.er.usgs.gov
        join natdb.nat_aqfr_state@natdb.er.usgs.gov
          on nat_aqfr.nat_aqfr_cd = nat_aqfr_state.nat_aqfr_cd;
@@ -370,15 +370,15 @@ commit;
 prompt parm_meth
 truncate table parm_meth;
 insert /*+ append parallel(4) */ into parm_meth
-select trim(parm_cd),
-       trim(meth_cd),
-       trim(parm_meth_lgcy_cd),
-       trim(parm_meth_rnd_tx),
-       trim(parm_meth_init_nm),
+select regexp_replace(parm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(meth_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_meth_lgcy_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_meth_rnd_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_meth_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        parm_meth_init_dt,
-       trim(parm_meth_rev_nm),
+       regexp_replace(parm_meth_rev_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        parm_meth_rev_dt,
-       trim(parm_meth_vld_fg),
+       regexp_replace(parm_meth_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
        decode(regexp_instr(parm_meth_rnd_tx, '[1-9]', 1, 1),
               1, '0.001',
               2, '0.01',
@@ -395,37 +395,37 @@ commit;
 prompt parm
 truncate table parm;
 insert /*+ append parallel(4) */ into parm
-select trim(parm.parm_cd),
-       trim(parm.parm_nm),
-       trim(parm.parm_rmk_tx),
-       trim(parm.parm_unt_tx),
-       trim(parm.parm_seq_nu),
-       trim(parm.parm_seq_grp_cd),
-       trim(parm.parm_ds),
-       trim(parm.parm_medium_tx),
-       trim(parm.parm_frac_tx),
-       trim(parm.parm_temp_tx),
-       trim(parm.parm_stat_tx),
-       trim(parm.parm_tm_tx),
-       trim(parm.parm_wt_tx),
-       trim(parm.parm_size_tx),
-       trim(parm.parm_entry_fg),
-       trim(parm.parm_public_fg),
-       trim(parm.parm_neg_fg),
-       trim(parm.parm_zero_fg),
-       trim(parm.parm_null_fg),
-       trim(parm.parm_ts_fg),
-       trim(parm.parm_init_dt),
-       trim(parm.parm_init_nm),
-       trim(parm.parm_rev_dt),
-       trim(parm.parm_rev_nm),
+select regexp_replace(parm.parm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_rmk_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_unt_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_seq_nu, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_seq_grp_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_medium_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_frac_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_temp_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_stat_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_tm_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_wt_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_size_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_entry_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_public_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_neg_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_zero_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_null_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_ts_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_init_dt, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_rev_dt, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm.parm_rev_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        parm_seq_grp_cd.parm_seq_grp_nm,
        parm_alias.wqpcrosswalk,
        parm_alias.srsname,
        parm_meth.multiplier
   from natdb.parm@natdb.er.usgs.gov
        left join natdb.parm_seq_grp_cd@natdb.er.usgs.gov
-         on trim(parm.parm_seq_grp_cd) = trim(parm_seq_grp_cd.parm_seq_grp_cd)
+         on regexp_replace(parm.parm_seq_grp_cd, '(^[[:space:]]*|[[:space:]]*$)') = regexp_replace(parm_seq_grp_cd.parm_seq_grp_cd, '(^[[:space:]]*|[[:space:]]*$)')
        join (select *
                from (select parm_cd, parm_alias_cd, parm_alias_nm
                        from natdb.parm_alias@natdb.er.usgs.gov
@@ -433,9 +433,9 @@ select trim(parm.parm_cd),
                      pivot (max(parm_alias_nm)
                             for parm_alias_cd in ('WQPCROSSWALK' wqpcrosswalk, 'SRSNAME' srsname))
                where nvl(wqpcrosswalk, srsname) is not null) parm_alias
-         on trim(parm.parm_cd) = trim(parm_alias.parm_cd)
+         on regexp_replace(parm.parm_cd, '(^[[:space:]]*|[[:space:]]*$)') = regexp_replace(parm_alias.parm_cd, '(^[[:space:]]*|[[:space:]]*$)')
        left join parm_meth
-         on trim(parm.parm_cd) = parm_meth.parm_cd and
+         on regexp_replace(parm.parm_cd, '(^[[:space:]]*|[[:space:]]*$)') = parm_meth.parm_cd and
             parm_meth.meth_cd is null
  where parm.parm_public_fg = 'Y';
 commit;
@@ -443,34 +443,121 @@ commit;
 prompt parm_alias
 truncate table parm_alias;
 insert /*+ append parallel(4) */ into parm_alias
-select trim(parm_cd),
-       trim(parm_alias_cd),
-       trim(parm_alias_nm),
+select regexp_replace(parm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_alias_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(parm_alias_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        parm_alias_init_dt,
-       trim(parm_alias_init_nm),
+       regexp_replace(parm_alias_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        parm_alias_rev_dt,
-       trim(parm_alias_rev_nm)
+       regexp_replace(parm_alias_rev_nm, '(^[[:space:]]*|[[:space:]]*$)')
   from natdb.parm_alias@natdb.er.usgs.gov;
 commit;
 
 prompt proto_org
 truncate table proto_org;
 insert /*+ append parallel(4) */ into proto_org
-select trim(proto_org_cd),
-       trim(proto_org_nm),
-       trim(proto_org_fv_cd),
-       trim(proto_org_vld_fg),
-       trim(proto_org_init_nm),
+select regexp_replace(proto_org_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(proto_org_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(proto_org_fv_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(proto_org_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(proto_org_init_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        proto_org_init_dt,
-       trim(proto_org_rev_nm),
+       regexp_replace(proto_org_rev_nm, '(^[[:space:]]*|[[:space:]]*$)'),
        proto_org_rev_dt
   from natdb.proto_org@natdb.er.usgs.gov;
 commit;
 
-prompt sample_parameter
-truncate table sample_parameter;
-insert /*+ append parallel(4) */ into sample_parameter
-select sample_id,
+prompt site_tp
+truncate table site_tp;
+insert /*+ append parallel(4) */ into site_tp
+select regexp_replace(site_tp_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       site_tp_srt_nu,
+       regexp_replace(site_tp_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_tp_prim_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_tp_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_tp_ln, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(site_tp_ds, '(^[[:space:]]*|[[:space:]]*$)')
+  from natdb.site_tp@natdb.er.usgs.gov;
+commit;
+
+prompt state
+truncate table state;
+insert /*+ append parallel(4) */ into state
+select regexp_replace(country_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_post_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_max_lat_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_min_lat_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_max_long_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_min_long_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_max_alt_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_min_alt_va, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(state_md, '(^[[:space:]]*|[[:space:]]*$)')
+ from natdb.state@natdb.er.usgs.gov;
+commit;
+
+prompt tu
+truncate table tu;
+insert /*+ append parallel(4) */ into tu
+select tu_id,
+       regexp_replace(tu_1_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_1_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_2_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_2_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_3_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_3_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_4_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_4_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_unnm_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_use_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_unaccp_rsn_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_cred_rat_tx, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_cmplt_rat_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tu_curr_rat_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       tu_phyl_srt_nu,
+       tu_cr,
+       tu_par_id,
+       tu_tax_auth_id,
+       tu_hybr_auth_id,
+       tu_king_id,
+       tu_rnk_id,
+       tu_md
+  from natdb.tu@natdb.er.usgs.gov;
+commit;
+
+prompt tz
+truncate table tz;
+insert /*+ append parallel4) */ into tz
+select regexp_replace(tz_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       tz_nu,
+       regexp_replace(tz_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_ds, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_utc_offset_tm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_dst_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_dst_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(tz_dst_utc_offset_tm, '(^[[:space:]]*|[[:space:]]*$)')
+  from natdb.tz@natdb.er.usgs.gov;
+commit;
+
+prompt val_qual_cd
+truncate table val_qual_cd;
+insert /*+ append parallel(4) */ into val_qual_cd
+select regexp_replace(val_qual_cd, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(val_qual_tp, '(^[[:space:]]*|[[:space:]]*$)'),
+       val_qual_srt_nu,
+       regexp_replace(val_qual_vld_fg, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(val_qual_nm, '(^[[:space:]]*|[[:space:]]*$)'),
+       regexp_replace(val_qual_ds, '(^[[:space:]]*|[[:space:]]*$)')
+  from natdb.val_qual_cd@natdb.er.usgs.gov;
+commit;
+
+prompt int_sample_parameter
+truncate table int_sample_parameter;
+insert /*+ append parallel(4) */ into int_sample_parameter
+select nwis_host_nm,
+       db_no,
+       record_no,
        v71999,
        v50280,
        v72015,
@@ -486,12 +573,12 @@ select sample_id,
        v71999_fxd_nm,
        v82398_fxd_tx,
        v84164_fxd_tx
-  from (select * from (select sample_id, parameter_cd, result_unrnd_va
-                         from qw_result
-                        where result_web_cd = 'Y' and
-                              parameter_cd in ('71999', '50280', '72015', '82047', '72016', '82048', '00003', '00098', '78890', '78891', '82398', '84164'))
-                       pivot (max(result_unrnd_va)
-                              for parameter_cd in ('71999' V71999, '50280' V50280, '72015' V72015, '82047' V82047, '72016' V72016, '82048' V82048,
+  from (select * from (select nwis_host_nm, db_no, record_no, parm_cd, result_va_tx
+                         from int_qw_result
+                        where parm_cd in ('71999', '50280', '72015', '82047', '72016', '82048', '00003', '00098', '78890', '78891', '82398', '84164') and
+                              deprecated_fg = 'N')
+                       pivot (max(result_va_tx)
+                              for parm_cd in ('71999' V71999, '50280' V50280, '72015' V72015, '82047' V82047, '72016' V72016, '82048' V82048,
                                                    '00003' V00003, '00098' V00098, '78890' V78890, '78891' V78891, '82398' V82398, '84164' V84164))
        ) p2
        left join (select fxd_nm v71999_fxd_nm, fxd_va from fxd where parm_cd = '71999') fxd_71999
@@ -500,77 +587,6 @@ select sample_id,
          on p2.v82398 = fxd_82398.fxd_va
        left join (select fxd_tx v84164_fxd_tx, fxd_va from fxd where parm_cd = '84164') fxd_84164
          on p2.v84164 = fxd_84164.fxd_va;
-commit;
-
-prompt site_tp
-truncate table site_tp;
-insert /*+ append parallel(4) */ into site_tp
-select trim(site_tp_cd),
-       site_tp_srt_nu,
-       trim(site_tp_vld_fg),
-       trim(site_tp_prim_fg),
-       trim(site_tp_nm),
-       trim(site_tp_ln),
-       trim(site_tp_ds)
-  from natdb.site_tp@natdb.er.usgs.gov;
-commit;
-
-prompt state
-truncate table state;
-insert /*+ append parallel(4) */ into state
-select trim(country_cd),
-       trim(state_cd),
-       trim(state_nm),
-       trim(state_post_cd),
-       trim(state_max_lat_va),
-       trim(state_min_lat_va),
-       trim(state_max_long_va),
-       trim(state_min_long_va),
-       trim(state_max_alt_va),
-       trim(state_min_alt_va),
-       trim(state_md)
- from natdb.state@natdb.er.usgs.gov;
-commit;
-
-prompt tu
-truncate table tu;
-insert /*+ append parallel(4) */ into tu
-select tu_id,
-       trim(tu_1_cd),
-       trim(tu_1_nm),
-       trim(tu_2_cd),
-       trim(tu_2_nm),
-       trim(tu_3_cd),
-       trim(tu_3_nm),
-       trim(tu_4_cd),
-       trim(tu_4_nm),
-       trim(tu_unnm_cd),
-       trim(tu_use_cd),
-       trim(tu_unaccp_rsn_tx),
-       trim(tu_cred_rat_tx),
-       trim(tu_cmplt_rat_cd),
-       trim(tu_curr_rat_cd),
-       tu_phyl_srt_nu,
-       tu_cr,
-       tu_par_id,
-       tu_tax_auth_id,
-       tu_hybr_auth_id,
-       tu_king_id,
-       tu_rnk_id,
-       tu_md
-  from natdb.tu@natdb.er.usgs.gov;
-commit;
-
-prompt val_qual_cd
-truncate table val_qual_cd;
-insert /*+ append parallel(4) */ into val_qual_cd
-select trim(val_qual_cd),
-       trim(val_qual_tp),
-       val_qual_srt_nu,
-       trim(val_qual_vld_fg),
-       trim(val_qual_nm),
-       trim(val_qual_ds)
-  from natdb.val_qual_cd@natdb.er.usgs.gov;
 commit;
 
 select 'copy from natprod end time: ' || systimestamp from dual;
