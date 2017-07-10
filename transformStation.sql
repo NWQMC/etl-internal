@@ -28,7 +28,12 @@ select /*+ parallel(4) */
        ndcbh.organization_id organization,
        site_tp.primary_site_type site_type,
        sitefile.huc_cd huc,
-       sitefile.country_cd || ':' || sitefile.state_cd || ':' || sitefile.county_cd governmental_unit_code,
+       case
+         when sitefile.country_cd is null then
+           null
+         else
+           sitefile.country_cd || ':' || sitefile.state_cd || ':' || sitefile.county_cd
+       end governmental_unit_code,
        case
          when sitefile.dec_long_va is null or
               sitefile.dec_lat_va is null then
