@@ -248,8 +248,6 @@ select /*+ parallel(4) */
        r.deprecated_fg,
        r.result_web_cd
   from nwis_ws_star.int_qw_result r
-       join nwis_ws_star.int_qw_result
-           on r.sample_id = samp.sample_id
        join activity_swap_nwis
            on r.nwis_host_nm = substr(activity_swap_nwis.activity, 1, instr(activity_swap_nwis.activity, '.') - 1) and
               r.db_no = substr(activity_swap_nwis.activity, instr(activity_swap_nwis.activity, '.') + 1, 2) and

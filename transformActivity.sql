@@ -225,6 +225,7 @@ select 1 data_source_id,
        end sample_collect_equip_name,
        samp.deprecated_fg,
        samp.sample_web_cd
+       (select count(*) from nwis_ws_star.int_qw_result where int_qw_result.sample_id = samp.sample_id) result_count
   from nwis_ws_star.int_qw_sample samp
        join station_swap_nwis s
          on samp.agency_cd || '-' || samp.site_no = s.site_id and
