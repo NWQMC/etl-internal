@@ -24,7 +24,7 @@ insert /*+ append parallel(4) */
                            activity_conducting_org, activity_comment, sample_aqfr_name, hydrologic_condition_name,
                            hydrologic_event_name, sample_collect_method_id,
                            sample_collect_method_ctx, sample_collect_method_name, act_sam_collect_meth_qual_type,
-                           act_sam_collect_meth_desc, sample_collect_equip_name, deprecated_flag, web_code)
+                           act_sam_collect_meth_desc, sample_collect_equip_name, deprecated_flag, web_code, result_count)
 select 1 data_source_id,
        'NWIS' data_source,
        s.station_id,
