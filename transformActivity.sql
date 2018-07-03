@@ -24,7 +24,7 @@ insert /*+ append parallel(4) */
                            activity_conducting_org, activity_comment, sample_aqfr_name, hydrologic_condition_name,
                            hydrologic_event_name, sample_collect_method_id,
                            sample_collect_method_ctx, sample_collect_method_name, act_sam_collect_meth_qual_type,
-                           act_sam_collect_meth_desc, sample_collect_equip_name, deprecated_flag, web_code)
+                           act_sam_collect_meth_desc, sample_collect_equip_name, deprecated_flag, web_code, result_count)
 select 1 data_source_id,
        'NWIS' data_source,
        s.station_id,
@@ -225,6 +225,7 @@ select 1 data_source_id,
        end sample_collect_equip_name,
        samp.deprecated_fg,
        samp.sample_web_cd
+       (select count(*) from nwis_ws_star.int_qw_result where int_qw_result.nwis_host_nm = samp.nwis_host_nm and int_qw_result.db_no = samp.db_no and int_qw_result.record_no = samp.record_no) result_count
   from nwis_ws_star.int_qw_sample samp
        join station_swap_nwis s
          on samp.agency_cd || '-' || samp.site_no = s.site_id and
